@@ -1,14 +1,19 @@
-FROM nikolaik/python-nodejs:python3.10-nodejs18
+FROM ohshin/ubot:dev
 
-RUN apt-get update -y && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends ffmpeg neofetch git \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /ubotol
+RUN chmod 777 /ubotol
 
-RUN git clone https://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@github.com/hidagans/bottol.git /bottol
+# Installing Requirements
+RUN pip3 install -U pip
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-WORKDIR /bottol
+# If u want to use /update feature, uncomment the following and edit
+#RUN git config --global user.email "your_email"
+#RUN git config --global user.name "git_username"
 
-RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
+# Copying All Source
+COPY . .
 
-CMD ["python3", "-m", "ubot"]
+# Starting Bot
+CMD ["bash","start.sh"]
